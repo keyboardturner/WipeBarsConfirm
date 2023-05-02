@@ -1,8 +1,9 @@
-## Interface: 100007
+## Interface: 100100
 ## Author: Keyboardturner
-## Version: 0.0.7
+## Version: 0.0.8
 ## Title: WipeBarsConfirm
 ## Notes: Makes as clickable button in both Edit Mode and the Talents frame to wipe your action bars clean. Additionally adds the chat command /wipebars.
+## IconTexture: Interface/Addons/WipeBarsConfirm/WipeBarsConfirm.blp
 ## SavedVariables: WipeBarsConfirm_DB
 
 core.lua

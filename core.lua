@@ -257,7 +257,7 @@ WipeBarsPanel.Version:SetFont(WipeBarsPanel.Version:GetFont(), 12);
 WipeBarsPanel.Version:SetTextColor(1,1,1,1);
 WipeBarsPanel.Version:ClearAllPoints();
 WipeBarsPanel.Version:SetPoint("TOPLEFT", WipeBarsPanel, "TOPLEFT",400,-21);
-WipeBarsPanel.Version:SetText("Version" .. ": " .. GetAddOnMetadata("WipeBarsConfirm", "Version"));
+WipeBarsPanel.Version:SetText("Version" .. ": " .. C_AddOns.GetAddOnMetadata("WipeBarsConfirm", "Version"));
 
 WipeBarsPanel.TalentCheckbox = CreateFrame("CheckButton", "WBCTalentCheckbox", WipeBarsPanel, "UICheckButtonTemplate");
 WipeBarsPanel.TalentCheckbox:ClearAllPoints();
@@ -289,14 +289,15 @@ WipeBarsPanel.EditmodeCheckbox:SetScript("OnClick", function(self)
 	end
 end);
 
-
-InterfaceOptions_AddCategory(WipeBarsPanel);
+local category, layout = Settings.RegisterCanvasLayoutCategory(WipeBarsPanel, WipeBarsPanel.name, WipeBarsPanel.name);
+category.ID = WipeBarsPanel.name;
+Settings.RegisterAddOnCategory(category)
 
 function buttonWipe.TalentFrameEventFrame()
 	if UnitAffectingCombat("player") ~= true and WipeBarsConfirm_DB.Talent == true then
-		buttonWipe.button:SetParent(ClassTalentFrame.TalentsTab)
+		buttonWipe.button:SetParent(PlayerSpellsFrame.TalentsFrame)
 		buttonWipe.button:Show()
-		buttonWipe.button:SetPoint("CENTER", ClassTalentFrame.TalentsTab, "BOTTOMLEFT", 153, 15)
+		buttonWipe.button:SetPoint("CENTER", PlayerSpellsFrame.TalentsFrame, "BOTTOMLEFT", 153, 15)
 	else
 		return
 	end
@@ -312,7 +313,7 @@ function buttonWipe.EditModeEventFrame()
 	end
 end
 
-EventRegistry:RegisterCallback('TalentFrame.TalentTab.Show', buttonWipe.TalentFrameEventFrame)
+EventRegistry:RegisterCallback('PlayerSpellsFrame.TalentTab.Show', buttonWipe.TalentFrameEventFrame)
 EventRegistry:RegisterCallback('EditMode.Enter', buttonWipe.EditModeEventFrame)
 
 SLASH_WIPEBARS1 = "/wipebars"

@@ -121,29 +121,11 @@ local defaultsTable = {
 };
 
 
-buttonWipe.button = CreateFrame("Button", nil, UIParent)
-buttonWipe.button:SetWidth(130)
-buttonWipe.button:SetHeight(25)
+buttonWipe.button = CreateFrame("Button", nil, UIParent, "UIPanelButtonTemplate")
+buttonWipe.button:SetWidth(164)
+buttonWipe.button:SetHeight(22)
 buttonWipe.button:SetText("Wipe Action Bars")
 buttonWipe.button:SetNormalFontObject("GameFontNormal")
-
-buttonWipe.button.ntex = buttonWipe.button:CreateTexture()
-buttonWipe.button.ntex:SetTexture("Interface/Buttons/UI-Panel-Button-Up")
-buttonWipe.button.ntex:SetTexCoord(0, 0.625, 0, 0.6875)
-buttonWipe.button.ntex:SetAllPoints()
-buttonWipe.button:SetNormalTexture(buttonWipe.button.ntex)
-
-buttonWipe.button.htex = buttonWipe.button:CreateTexture()
-buttonWipe.button.htex:SetTexture("Interface/Buttons/UI-Panel-Button-Highlight")
-buttonWipe.button.htex:SetTexCoord(0, 0.625, 0, 0.6875)
-buttonWipe.button.htex:SetAllPoints()
-buttonWipe.button:SetHighlightTexture(buttonWipe.button.htex)
-
-buttonWipe.button.ptex = buttonWipe.button:CreateTexture()
-buttonWipe.button.ptex:SetTexture("Interface/Buttons/UI-Panel-Button-Down")
-buttonWipe.button.ptex:SetTexCoord(0, 0.625, 0, 0.6875)
-buttonWipe.button.ptex:SetAllPoints()
-buttonWipe.button:SetPushedTexture(buttonWipe.button.ptex)
 buttonWipe.button:SetScript("OnClick", function(self, button)
 	StaticPopup_Show("WBC_WIPE_BARS")
 end)
@@ -297,7 +279,7 @@ function buttonWipe.TalentFrameEventFrame()
 	if UnitAffectingCombat("player") ~= true and WipeBarsConfirm_DB.Talent == true then
 		buttonWipe.button:SetParent(PlayerSpellsFrame.TalentsFrame)
 		buttonWipe.button:Show()
-		buttonWipe.button:SetPoint("CENTER", PlayerSpellsFrame.TalentsFrame, "BOTTOMLEFT", 153, 15)
+		buttonWipe.button:SetPoint("LEFT", PlayerSpellsFrame.TalentsFrame.SearchBox, "RIGHT", 15, 0)
 	else
 		return
 	end

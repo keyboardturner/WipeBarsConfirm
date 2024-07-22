@@ -1,3 +1,7 @@
+# 0.1.5
+
+TOC updates for TWW, adjustment to button placement on the Talent frame
+
 # 0.1.4
 
 toc bump to 10.2.7

@@ -9,4 +9,16 @@
 ## X-WoWI-ID: 26479
 ## X-Wago-ID: kRNLyE6o
 
+## Category-enUS: Action Bars
+## Category-deDE: Aktionsleisten
+## Category-esES: Barras de acción
+## Category-esMX: Barras de acción
+## Category-frFR: Barres d’action
+## Category-itIT: Barre delle azioni
+## Category-koKR: 행동 단축바
+## Category-ptBR: Barras de ação
+## Category-ruRU: Панели команд
+## Category-zhCN: 动作条
+## Category-zhTW: 快捷列
+
 core.lua

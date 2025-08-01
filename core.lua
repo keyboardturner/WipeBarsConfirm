@@ -70,6 +70,7 @@ frame:SetBackdrop(frame.backdrop)
 frame:SetFrameStrata("DIALOG")
 frame:EnableMouse(true)
 frame:SetMovable(true)
+frame:SetClampedToScreen(true)
 frame:RegisterForDrag("LeftButton")
 frame:SetScript("OnDragStart", frame.StartMoving)
 frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
@@ -143,7 +144,7 @@ end
 --WipeBarsConfirm_DB
 local defaultsTable = {
 	Talent = true,
-	Editmode = true,
+	--Editmode = true,
 	ActionBars = {
 		bar1 = true, -- 1,12
 		bar2 = true, -- 61,72
@@ -277,7 +278,7 @@ WipeBarsPanel.Version:SetText("Version" .. ": " .. C_AddOns.GetAddOnMetadata("Wi
 
 WipeBarsPanel.TalentCheckbox = CreateFrame("CheckButton", "WBCTalentCheckbox", WipeBarsPanel, "UICheckButtonTemplate");
 WipeBarsPanel.TalentCheckbox:ClearAllPoints();
-WipeBarsPanel.TalentCheckbox:SetPoint("TOPLEFT", 350, -53);
+WipeBarsPanel.TalentCheckbox:SetPoint("TOPLEFT", 50, -53);
 getglobal(WipeBarsPanel.TalentCheckbox:GetName().."Text"):SetText(TALENTS);
 
 WipeBarsPanel.TalentCheckbox:SetScript("OnClick", function(self)
@@ -290,20 +291,6 @@ WipeBarsPanel.TalentCheckbox:SetScript("OnClick", function(self)
 	end
 end);
 
-WipeBarsPanel.EditmodeCheckbox = CreateFrame("CheckButton", "WBCEditmodeCheckbox", WipeBarsPanel, "UICheckButtonTemplate");
-WipeBarsPanel.EditmodeCheckbox:ClearAllPoints();
-WipeBarsPanel.EditmodeCheckbox:SetPoint("TOPLEFT", 350/2, -53);
-getglobal(WipeBarsPanel.EditmodeCheckbox:GetName().."Text"):SetText(HUD_EDIT_MODE_MENU);
-
-WipeBarsPanel.EditmodeCheckbox:SetScript("OnClick", function(self)
-	if WipeBarsPanel.EditmodeCheckbox:GetChecked() then
-		WipeBarsConfirm_DB.Editmode = true;
-	else
-		WipeBarsConfirm_DB.Editmode = false;
-		buttonWipe.button:Hide()
-		buttonWipe.button:ClearAllPoints();
-	end
-end);
 
 local category, layout = Settings.RegisterCanvasLayoutCategory(WipeBarsPanel, WipeBarsPanel.name, WipeBarsPanel.name);
 category.ID = WipeBarsPanel.name;
@@ -319,18 +306,8 @@ function buttonWipe.TalentFrameEventFrame()
 	end
 end
 
-function buttonWipe.EditModeEventFrame()
-	if UnitAffectingCombat("player") ~= true and WipeBarsConfirm_DB.Editmode == true then
-		buttonWipe.button:SetParent(EditModeManagerFrame)
-		buttonWipe.button:Show()
-		buttonWipe.button:SetPoint("CENTER", EditModeManagerFrame, "TOPRIGHT", -75, -40)
-	else
-		return
-	end
-end
 
 EventRegistry:RegisterCallback('PlayerSpellsFrame.TalentTab.Show', buttonWipe.TalentFrameEventFrame)
-EventRegistry:RegisterCallback('EditMode.Enter', buttonWipe.EditModeEventFrame)
 
 SLASH_WIPEBARS1 = "/wipebars"
 SlashCmdList["WIPEBARS"] = function(msg)
@@ -338,7 +315,8 @@ SlashCmdList["WIPEBARS"] = function(msg)
 		print(ERR_NOT_IN_COMBAT);
 		return
 	else
-		StaticPopup_Show("WBC_WIPE_BARS");
+		--StaticPopup_Show("WBC_WIPE_BARS");
+		frame:Show();
 	end
 end
 
@@ -358,7 +336,6 @@ function startup:OnEvent(event,arg1)
 		end
 
 		WipeBarsPanel.TalentCheckbox:SetChecked(WipeBarsConfirm_DB.Talent);
-		WipeBarsPanel.EditmodeCheckbox:SetChecked(WipeBarsConfirm_DB.Editmode);
 	end
 	if event == "PLAYER_REGEN_DISABLED" then
 		buttonWipe.button:Hide()

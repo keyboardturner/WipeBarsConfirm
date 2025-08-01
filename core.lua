@@ -54,49 +54,91 @@ function buttonWipe.func()
 		--for i = 1,240 do PickupAction(i) PutItemInBackpack() ClearCursor() end
 end
 
-StaticPopupDialogs["WBC_WIPE_BARS"] = {
-	text = "Are you sure you want to wipe all your current build action bars? This cannot be undone.",
-	button1 = "Yes",
-	button2 = "No",
-	OnAccept = function()
-		if UnitAffectingCombat("player") == true then
-			print(ERR_NOT_IN_COMBAT);
-			return
-		else
-			buttonWipe.func()
-		end
- 	end,
- 	OnShow = function()
- 		for k = 1,4 do
- 			local bingus = _G["StaticPopup" .. 1]
- 			local DialogText = _G["StaticPopup" .. k .. "Text"]:GetText()
- 			if DialogText == StaticPopupDialogs["WBC_WIPE_BARS"].text then
- 				bingus = _G["StaticPopup" .. k]
-				buttonWipe.BackdropFrame:SetParent(bingus);
-				buttonWipe.BackdropFrame:Show();
-				buttonWipe.BackdropFrame:SetPoint("TOPLEFT", bingus, "TOPRIGHT", 0, 0);
- 			end
- 		end
+local frame = CreateFrame("Frame", "WBCWipeBarsPopup", UIParent, "BackdropTemplate")
+frame.backdrop = {
+	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+ 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+ 	tile = true,
+ 	tileEdge = true,
+ 	tileSize = 8,
+ 	edgeSize = 8,
+ 	insets = { left = 1, right = 1, top = 1, bottom = 1 },
+}
+frame:SetSize(400, 160)
+frame:SetPoint("CENTER")
+frame:SetBackdrop(frame.backdrop)
+frame:SetFrameStrata("DIALOG")
+frame:EnableMouse(true)
+frame:SetMovable(true)
+frame:RegisterForDrag("LeftButton")
+frame:SetScript("OnDragStart", frame.StartMoving)
+frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+frame:SetBackdropColor(0,0,0,1)
+frame:Hide()
 
- 		for n = 1,8 do
- 			_G["WBC_ActionBarCB" .. n]:SetChecked(_G["WipeBarsConfirm_DB"]["ActionBars"]["bar" .. n])
-		end
+frame.text = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+frame.text:SetPoint("TOP", 0, -20)
+frame.text:SetWidth(360)
+frame.text:SetJustifyH("CENTER")
+frame.text:SetText("Are you sure you want to wipe all your current build action bars? This cannot be undone.")
 
- 		for s = 1,3 do
- 			_G["WBC_StanceBarCB" .. s]:SetChecked(_G["WipeBarsConfirm_DB"]["ActionBars"]["stance" .. s])
-		end
+-- Accept button
+frame.acceptButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+frame.acceptButton:SetSize(100, 25)
+frame.acceptButton:SetPoint("BOTTOMLEFT", 30, 20)
+frame.acceptButton:SetText("Yes")
+frame.acceptButton:SetScript("OnClick", function()
+	if UnitAffectingCombat("player") then
+		print(ERR_NOT_IN_COMBAT)
+	else
+		buttonWipe.func()
+		frame:Hide()
+	end
+end)
 
-		_G["WBC_UnkBarCB"]:SetChecked(_G["WipeBarsConfirm_DB"]["ActionBars"]["unknown" .. 1])
+frame.cancelButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+frame.cancelButton:SetSize(100, 25)
+frame.cancelButton:SetPoint("BOTTOMRIGHT", -30, 20)
+frame.cancelButton:SetText("No")
+frame.cancelButton:SetScript("OnClick", function()
+	frame:Hide()
+end)
 
- 	end,
- 	OnHide = function()
-		buttonWipe.BackdropFrame:Hide();
-		buttonWipe.BackdropFrame:ClearAllPoints();
- 	end,
-	timeout = 0,
-	whileDead = true,
-	hideOnEscape = true,
-};
+-- External checkbox panel
+frame.OnShow = function()
+	if buttonWipe and buttonWipe.BackdropFrame then
+		buttonWipe.BackdropFrame:SetParent(frame)
+		buttonWipe.BackdropFrame:Show()
+		buttonWipe.BackdropFrame:SetPoint("TOPLEFT", frame, "TOPRIGHT", 0, 0)
+	end
+
+	for n = 1, 8 do
+		local cb = _G["WBC_ActionBarCB" .. n]
+		if cb then cb:SetChecked(WipeBarsConfirm_DB.ActionBars["bar" .. n]) end
+	end
+
+	for s = 1, 3 do
+		local cb = _G["WBC_StanceBarCB" .. s]
+		if cb then cb:SetChecked(WipeBarsConfirm_DB.ActionBars["stance" .. s]) end
+	end
+
+	local cb = _G["WBC_UnkBarCB"]
+	if cb then cb:SetChecked(WipeBarsConfirm_DB.ActionBars["unknown1"]) end
+end
+
+frame.OnHide = function()
+	if buttonWipe and buttonWipe.BackdropFrame then
+		buttonWipe.BackdropFrame:Hide()
+		buttonWipe.BackdropFrame:ClearAllPoints()
+	end
+end
+
+frame:SetScript("OnShow", function() frame.OnShow() end)
+frame:SetScript("OnHide", function() frame.OnHide() end)
+
+local function ShowWipeBarsConfirmDialog()
+	frame:Show()
+end
 
 --WipeBarsConfirm_DB
 local defaultsTable = {
@@ -127,20 +169,12 @@ buttonWipe.button:SetHeight(22)
 buttonWipe.button:SetText("Wipe Action Bars")
 buttonWipe.button:SetNormalFontObject("GameFontNormal")
 buttonWipe.button:SetScript("OnClick", function(self, button)
-	StaticPopup_Show("WBC_WIPE_BARS")
+	--StaticPopup_Show("WBC_WIPE_BARS")
+	ShowWipeBarsConfirmDialog()
 end)
 buttonWipe.button:Hide()
 
-buttonWipe.backdropInfo =
-{
-	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
- 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
- 	tile = true,
- 	tileEdge = true,
- 	tileSize = 8,
- 	edgeSize = 8,
- 	insets = { left = 1, right = 1, top = 1, bottom = 1 },
-}
+buttonWipe.backdropInfo = frame.backdrop
 
 buttonWipe.BackdropFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 buttonWipe.BackdropFrame:SetPoint("TOPLEFT", nil, "TOPRIGHT", 0, 0)

@@ -1,6 +1,6 @@
 # 0.2.1
 
-Static Popup Removal Update, 11.2.0 toc update, remove from edit mode
+11.2.0 toc update, remove from edit mode
 
 # 0.2.0
 

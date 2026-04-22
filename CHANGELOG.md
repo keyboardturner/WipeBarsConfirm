@@ -1,6 +1,26 @@
-# 0.2.6
+# 0.2.7
+
+Removed all of the cool stuff that was in 2.6, aka "0.2.6" to commoners
 
 12.0.5 toc update
+
+# 2.6
+
+There never was a 0.2.6. This has been an illusion all along. A lie. A scheme.
+
+Added 592834 porkchop functions into each action button.
+
+Removed the concept of the zero. 
+
+Added the concept of the zero back after some drama with ancient greece and fibbonacci.
+
+Added "e" shortcut to delete all your trp3 data
+
+Added 2 threats
+
+Removed 2 threats
+
+Adjusted hunter and rogue weapon durability to rapidly decrease faster than any other class
 
 # 0.2.5
 

@@ -1,5 +1,8 @@
 local buttonWipe = CreateFrame("Frame")
 
+local build = select(4, GetBuildInfo());
+local IsForever = build >= 16000 and build < 20000;
+
 function buttonWipe.func()
 	if WipeBarsConfirm_DB.ActionBars.bar1 == true then
 		-- action bar 1
@@ -263,9 +266,15 @@ Settings.RegisterAddOnCategory(category)
 
 function buttonWipe.TalentFrameEventFrame()
 	if UnitAffectingCombat("player") ~= true and WipeBarsConfirm_DB.Talent == true then
-		buttonWipe.button:SetParent(PlayerSpellsFrame.TalentsFrame)
-		buttonWipe.button:Show()
-		buttonWipe.button:SetPoint("LEFT", PlayerSpellsFrame.TalentsFrame.SearchBox, "RIGHT", 15, 0)
+		if IsForever then
+			buttonWipe.button:SetParent(PlayerSpellsFrame.TalentsFrame)
+			buttonWipe.button:Show()
+			buttonWipe.button:SetPoint("BOTTOMRIGHT", PlayerSpellsFrame.TalentsFrame, "BOTTOMRIGHT", -5, 5)
+		else
+			buttonWipe.button:SetParent(PlayerSpellsFrame.TalentsFrame)
+			buttonWipe.button:Show()
+			buttonWipe.button:SetPoint("LEFT", PlayerSpellsFrame.TalentsFrame.SearchBox, "RIGHT", 15, 0)
+		end
 	else
 		return
 	end
